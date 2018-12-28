@@ -39,24 +39,35 @@ P_k_1 = [1, 0, 0, 0;
 
 % Measurement Model
 H_Lidar_ = [1, 0, 0, 0;
-            0, 1, 0, 0];
+            0, 1, 0, 0;
+            0, 0, 1, 0
+            0, 0, 0, 1];
             
 %measurement covariance matrix - laser
-R_laser_ = [noise_std_x, 0;
-            0, noise_std_y];
+R_laser_ = [noise_std_x, 0,           noise_std_x,           0;
+            0,           noise_std_y, 0,           noise_std_y;
+            noise_std_x,           0,           2*noise_std_x, 0
+            0,           noise_std_y,           0,           2*noise_std_y];
 
 x_k_1 = [14; 20; 0; 15];
 
-estimated = zeros(length(raw_measurement),2);
+estimated = zeros(length(raw_measurement),4);
+x_minus_1 = birth_mean(1);
+y_minus_1 = birth_mean(2);
 
 if (LIDAR_MODE)
     
   for n = 1: length(raw_measurement)
-      [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,2:3), R_laser_, P_k_1, H_Lidar_);
-      estimated(n,1:2) = x_k_k(1:2);
+      x_pos = raw_measurement(n,2);
+      y_pos = raw_measurement(n,3);      
+      raw_measurement(n,4) = (x_pos - x_minus_1)/dt;
+      raw_measurement(n,5) = (y_pos - y_minus_1)/dt;
+      [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,2:5), R_laser_, P_k_1, H_Lidar_);
+      estimated(n,:) = x_k_k;
 
-      [x_k_1, P_k_1] = predict(x_k_k, P_k_k, F);
-      
+      [x_k_1, P_k_1] = predict(x_k_k, P_k_k, F);    
+      x_minus_1 = x_pos;
+      y_minus_1 = y_pos;
   end
   
 else
@@ -75,5 +86,5 @@ end
 
 plot(estimated(:,1),estimated(:,2),'k.')
 
-rmse_estimation = CalculateRMSE(estimated, ground_truth(:,2:3));
-rmse_measurement = CalculateRMSE(raw_measurement(:,2:3), ground_truth(:,2:3));
+rmse_estimation = CalculateRMSE(estimated, ground_truth(:,2:5));
+rmse_measurement = CalculateRMSE(raw_measurement(:,2:5), ground_truth(:,2:5));
