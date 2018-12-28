@@ -2,5 +2,5 @@
 
 ## Summary
 
-This repository holds the environmental model generation node for the DRS360 project.
+This repository holds the Simple Kalman Filter Implementation for Lidar and Radar Sensor.
 
