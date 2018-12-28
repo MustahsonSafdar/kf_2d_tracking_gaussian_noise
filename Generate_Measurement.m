@@ -1,4 +1,3 @@
-%% 
 % Simulate Direct Radar Measurement
 VERBOSE = true;
 % The noise would be uniform throught the plane
@@ -38,13 +37,17 @@ noise_std_x = 2; % one meter
 %Noise in Y direction
 noise_std_y = 2; % one meter
 
+%It is a Lidar case
 if UNIFORM_NOISE
+    % As we do not have velocity information so velocity components is set to zero
+    vx = zeros(num_measurement,1);
+    vy = vx;
     raw_x = noise_std_x.*randn(num_measurement,1)+ground_truth(:,2);
     raw_y = noise_std_y.*randn(num_measurement,1)+ground_truth(:,3);
     raw_range = sqrt(raw_x.^2+raw_y.^2);
     raw_angle = atan(raw_x./raw_y);
     raw_velocity = velocity_noise_std*randn(num_measurement,1)+ground_truth(:,8);
-    raw_measurement = [ground_truth(:,1) raw_x raw_y raw_range raw_angle raw_velocity];
+    raw_measurement = [ground_truth(:,1) raw_x raw_y vx vy raw_range raw_angle raw_velocity];
     clear raw_range raw_angle raw_x raw_y raw_velocity
 else
     raw_range = range_noise_std*randn(num_measurement,1)+ground_truth(:,6);
@@ -53,7 +56,12 @@ else
 
     raw_x = raw_range.*sin(raw_angle);
     raw_y = raw_range.*cos(raw_angle);
-    raw_measurement = [ground_truth(:,1) raw_x raw_y raw_range raw_angle raw_velocity];
+    % We do have radial velocity but we do not know velcoity direction of actual object. 
+    % So, vleicty is zero here
+    % Note, later it will be updated in Radar Estimation part
+    vx = zeros(num_measurement,1);
+    vy = vx;
+    raw_measurement = [ground_truth(:,1) raw_x raw_y vx vy raw_range raw_angle raw_velocity];
     clear raw_range raw_angle raw_x raw_y raw_velocity
 end
 
