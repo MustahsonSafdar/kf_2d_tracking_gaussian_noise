@@ -5,7 +5,7 @@ UNIFORM_NOISE = true;   % Else noise would be added as in radar, more noise for 
 % 15 mete per second or 54 km per hour
 speed_vehicle = 15; 
 % [x_position, y_position_, velocity_x, velcoity_y]
-birth_mean = [14;20; 0; 15];
+birth_mean = [14; 20; 0; 15];
 % Number of measurement during simulation
 num_measurement = 100;
 
