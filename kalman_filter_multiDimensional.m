@@ -10,7 +10,7 @@ f_radar = 16;
 % Time between two measurement
 dt = 1/f_radar; % assuming constant radar measurement rate during whole period
 
-% State Transition Model
+% State Transition Model (Constat velocity Model)
 F = [1 0 dt 0; 
      0 1 0 dt;
      0 0 1 0; 
@@ -59,17 +59,22 @@ if (LIDAR_MODE)
     
   for n = 1: length(raw_measurement)
       x_pos = raw_measurement(n,2);
-      y_pos = raw_measurement(n,3);      
+      y_pos = raw_measurement(n,3);
+      % Velocity component estimation from position
       raw_measurement(n,4) = (x_pos - x_minus_1)/dt;
       raw_measurement(n,5) = (y_pos - y_minus_1)/dt;
+      % Update Step
       [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,2:5), R_laser_, P_k_1, H_Lidar_);
+      % Saving Estimated state for later qualitative analysis
       estimated(n,:) = x_k_k;
-
-      [x_k_1, P_k_1] = predict(x_k_k, P_k_k, F);    
+      % Prediction Step
+      [x_k_1, P_k_1] = predict(x_k_k, P_k_k, F);  
+      % Saved previous measurement to calculate velocity in next iteration
       x_minus_1 = x_pos;
       y_minus_1 = y_pos;
   end
   
+% Radar Measurement Case
 else
   
   for n = 1: length(raw_measurement)
@@ -86,5 +91,6 @@ end
 
 plot(estimated(:,1),estimated(:,2),'k.')
 
+% Root Mean Square Calculation
 rmse_estimation = CalculateRMSE(estimated, ground_truth(:,2:5));
 rmse_measurement = CalculateRMSE(raw_measurement(:,2:5), ground_truth(:,2:5));
