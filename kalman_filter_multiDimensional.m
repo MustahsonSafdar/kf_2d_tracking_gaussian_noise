@@ -5,22 +5,26 @@ close all
 LIDAR_MODE = true;
 RADAR_MODE = ~LIDAR_MODE;
 
-% State Transition Model
-dt = 1/16;
+% Frequency of radar measurement
+f_radar = 16;
+% Time between two measurement
+dt = 1/f_radar; % assuming constant radar measurement rate during whole period
 
+% State Transition Model
 F = [1 0 dt 0; 
      0 1 0 dt;
      0 0 1 0; 
      0 0 0 1];
+
+ % Generate simulated ground truth and noise realtime data
+Generate_Measurement
  
 %set the process covariance matrix Q
+% Note: This is not sure, where to use it, or should we use it 
 Q_ = zeros(4, 4);
 dt_2 = dt * dt;
 dt_3 = dt_2 * dt;
 dt_4 = dt_3 * dt;
-
-% Generate simulated ground truth and noise realtime data
-Generate_Measurement
 
 Q_ = [ dt_4/4*noise_std_x,   0,                    dt_3/2*noise_std_x,  0; 
        0,                    dt_4/4*noise_std_y,   0,                   dt_3/2*noise_std_y;

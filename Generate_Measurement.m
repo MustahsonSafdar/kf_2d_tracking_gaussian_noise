@@ -3,10 +3,6 @@
 VERBOSE = true;
 % The noise would be uniform throught the plane
 UNIFORM_NOISE = true;   % Else noise would be added as in radar, more noise for further the object is
-% Frequency of radar measurement
-f_radar = 16;
-% Time between two measurement
-dt = 1/f_radar; % assuming constant radar measurement rate during whole period
 % 15 mete per second or 54 km per hour
 speed_vehicle = 15; 
 % [x_position, y_position_, velocity_x, velcoity_y]
