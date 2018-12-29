@@ -16,7 +16,7 @@ F = [1 0 dt 0;
      0 0 1 0; 
      0 0 0 1];
 
- % Generate simulated ground truth and noise realtime data
+% Generate simulated ground truth and noise realtime data
 Generate_Measurement
  
 %set the process covariance matrix Q
@@ -30,24 +30,29 @@ Q_ = [ dt_4/4*noise_std_x,   0,                    dt_3/2*noise_std_x,  0;
        0,                    dt_4/4*noise_std_y,   0,                   dt_3/2*noise_std_y;
        dt_3/2*noise_std_x,   0,                    dt_2*noise_std_x,    0; 
        0,                    dt_3/2*noise_std_y,   0,                   dt_2*noise_std_y];
-       
+
 % Error Covairance Matrix
 P_k_1 = [1, 0, 0, 0;
          0, 1, 0, 0;
          0, 0, 1, 0;
          0, 0, 0, 1];
 
-% Measurement Model
+% Lidar Measurement Model
 H_Lidar_ = [1, 0, 0, 0;
             0, 1, 0, 0;
             0, 0, 1, 0
             0, 0, 0, 1];
-            
-%measurement covariance matrix - laser
+
+%measurement covariance matrix - Lidar
 R_laser_ = [noise_std_x, 0,           noise_std_x,           0;
             0,           noise_std_y, 0,           noise_std_y;
             noise_std_x,           0,           2*noise_std_x, 0
             0,           noise_std_y,           0,           2*noise_std_y];
+
+%measurement covariance matrix - Radar
+R_Radar_ = [range_noise_std, 0,               0;
+            0,               angle_noise_std, 0;
+            0,               0,               velocity_noise_std];
 
 x_k_1 = [14; 20; 0; 15];
 
@@ -55,8 +60,7 @@ estimated = zeros(length(raw_measurement),4);
 x_minus_1 = birth_mean(1);
 y_minus_1 = birth_mean(2);
 
-if (LIDAR_MODE)
-    
+if (LIDAR_MODE)    
   for n = 1: length(raw_measurement)
       x_pos = raw_measurement(n,2);
       y_pos = raw_measurement(n,3);
@@ -73,20 +77,19 @@ if (LIDAR_MODE)
       x_minus_1 = x_pos;
       y_minus_1 = y_pos;
   end
-  
 % Radar Measurement Case
 else
-  
   for n = 1: length(raw_measurement)
-      [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,2:5), R_k, P_k_1, H_Lidar_);
-      
-      disp (['update: ', num2str(x_k_k(1,1)), '  ',num2str(x_k_k(2,1))])
+      H_Radar_ = CalculateJacobian(x_k_1);
+      [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,6:8), P_k_1, R_Radar_, H_Radar_);
+      % Saving Estimated state for later qualitative analysis
+      estimated(n,:) = x_k_k;
+     % disp (['update: ', num2str(x_k_k(1,1)), '  ',num2str(x_k_k(2,1))])
       
       [x_k_1, P_k_1] = predict(x_k_k, P_k_k,F);
       
-      disp (['predict: ', num2str(x_k_1(1,1)), '  ',num2str(x_k_1(2,1))])
+    %  disp (['predict: ', num2str(x_k_1(1,1)), '  ',num2str(x_k_1(2,1))])
   end
-
 end
 
 plot(estimated(:,1),estimated(:,2),'k.')
