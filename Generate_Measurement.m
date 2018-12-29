@@ -1,7 +1,7 @@
 % Simulate Direct Radar Measurement
 VERBOSE = true;
 % The noise would be uniform throught the plane
-UNIFORM_NOISE = true;   % Else noise would be added as in radar, more noise for further the object is
+UNIFORM_NOISE = false;   % Else noise would be added as in radar, more noise for further the object is
 % 15 mete per second or 54 km per hour
 speed_vehicle = 15; 
 % [x_position, y_position_, velocity_x, velcoity_y]
