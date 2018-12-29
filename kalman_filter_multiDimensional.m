@@ -84,11 +84,9 @@ else
       [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,6:8), P_k_1, R_Radar_, H_Radar_);
       % Saving Estimated state for later qualitative analysis
       estimated(n,:) = x_k_k;
-     % disp (['update: ', num2str(x_k_k(1,1)), '  ',num2str(x_k_k(2,1))])
       
-      [x_k_1, P_k_1] = predict(x_k_k, P_k_k,F);
+      [x_k_1, P_k_1] = predict(x_k_k, P_k_k,F, Q_);
       
-    %  disp (['predict: ', num2str(x_k_1(1,1)), '  ',num2str(x_k_1(2,1))])
   end
 end
 
