@@ -1,4 +1,3 @@
-
 % Sensor Measurement Model : H_Sensor_
 % Sensor Measurement Noise : R_k
 % Current Measurement : z_k
@@ -8,7 +7,17 @@
 function [x_k_k, P_k_k, y_k_k] = update(x_k_1, z_k, P_k_1, R_k, H_Sensor_)
     if (length(z_k) == 3)
         z_pred = RadarCartesianToPolar(x_k_1);
-        y_k = z_k' - z_pred;        
+        y_k = z_k' - z_pred;  
+        
+        % normalize the angle between -pi to pi
+        while(y_k(2) > pi)
+            y_k(2) = y_k(2)-pi;
+        end
+
+        while(y_k(2) < -pi)
+            y_k(2) = y_k(2)+ pi;
+        end
+
         S_k = R_k + H_Sensor_*P_k_1*transpose(H_Sensor_);
         % Kalman Gain calculation
         K_k = P_k_1*transpose(H_Sensor_)*inv(S_k);

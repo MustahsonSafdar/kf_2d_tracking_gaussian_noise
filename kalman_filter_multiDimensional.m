@@ -54,7 +54,7 @@ R_Radar_ = [range_noise_std, 0,               0;
             0,               angle_noise_std, 0;
             0,               0,               velocity_noise_std];
 
-x_k_1 = [24; 20; 0; 15];
+x_k_1 = birth_mean;
 
 estimated = zeros(length(raw_measurement),4);
 x_minus_1 = birth_mean(1);

@@ -5,7 +5,7 @@ UNIFORM_NOISE = false;   % Else noise would be added as in radar, more noise for
 % 15 mete per second or 54 km per hour
 speed_vehicle = 15; 
 % [x_position, y_position_, velocity_x, velcoity_y]
-birth_mean = [24; 20; 0; 15];
+birth_mean = [-24; 20; 0; 15];
 % Number of measurement during simulation
 num_measurement = 100;
 
@@ -74,7 +74,7 @@ if (VERBOSE)
     axis equal 
     grid on 
     hold on 
-    xlim([0 40])
+    xlim([-40 40])
     ylim([0 120])
     xlabel('X axis')
     ylabel('Y-Axis')
