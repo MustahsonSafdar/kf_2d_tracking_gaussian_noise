@@ -13,10 +13,10 @@ function rmse = CalculateRMSE(estimations, ground_truth)
 
    %accumulate squared residuals
 
-       residual = estimations - ground_truth;
-       %coefficient-wise multiplication
-       residual = residual.*residual;
-       resiudal_sum = sum(residual);
-       rmse = (resiudal_sum./size(ground_truth,1))';
+   residual = estimations - ground_truth;
+   %coefficient-wise multiplication
+   residual = residual.*residual;
+   resiudal_sum = sum(residual);
+   rmse = (resiudal_sum./size(ground_truth,1))';
 
 end

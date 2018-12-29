@@ -5,7 +5,7 @@ UNIFORM_NOISE = true;   % Else noise would be added as in radar, more noise for 
 % 15 mete per second or 54 km per hour
 speed_vehicle = 15; 
 % [x_position, y_position_, velocity_x, velcoity_y]
-birth_mean = [14; 20; 0; 15];
+birth_mean = [24; 20; 0; 15];
 % Number of measurement during simulation
 num_measurement = 100;
 
@@ -36,9 +36,9 @@ angle_noise_std = 0.052359877559830;
 velocity_noise_std = 0.25; 
 
 %Noise in X direction
-noise_std_x = 2; % one meter
+noise_std_x = 1; % one meter
 %Noise in Y direction
-noise_std_y = 2; % one meter
+noise_std_y = 1; % one meter
 
 %It is a Lidar case
 if UNIFORM_NOISE
