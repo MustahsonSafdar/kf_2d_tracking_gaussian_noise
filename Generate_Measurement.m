@@ -2,6 +2,10 @@
 VERBOSE = true;
 % The noise would be uniform throught the plane
 UNIFORM_NOISE = false;   % Else noise would be added as in radar, more noise for further the object is
+
+LIDAR_MODE = false;
+RADAR_MODE = ~LIDAR_MODE;
+
 % 15 mete per second or 54 km per hour
 speed_vehicle = 15; 
 % [x_position, y_position_, velocity_x, velcoity_y]
@@ -41,7 +45,7 @@ noise_std_x = 1; % one meter
 noise_std_y = 1; % one meter
 
 %It is a Lidar case
-if UNIFORM_NOISE
+if LIDAR_MODE
     % As we do not have velocity information so velocity components is set to zero
     vx = zeros(num_measurement,1);
     vy = vx;

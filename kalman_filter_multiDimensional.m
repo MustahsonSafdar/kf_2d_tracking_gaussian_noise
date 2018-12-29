@@ -2,9 +2,6 @@ clc
 clear all
 close all
 
-LIDAR_MODE = false;
-RADAR_MODE = ~LIDAR_MODE;
-
 % Frequency of radar measurement
 f_radar = 16;
 % Time between two measurement
