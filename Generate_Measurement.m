@@ -28,9 +28,12 @@ for i = 1:num_measurement
 end
 
 %% Addition of noise
-range_noise_std = 0.40; % 40cm standard deviation 
-angle_noise_std = 0.052359877559830;    % 3 degree standard deviation 
-velocity_noise_std = 0.25; % 0.25 meter per second standard deviation  
+% Noise in Range 40cm standard deviation 
+range_noise_std = 0.40; 
+ % Azimuth Angle 3 degree standard deviation 
+angle_noise_std = 0.052359877559830;
+% Velocity Noise 0.25 meter per second standard deviation  
+velocity_noise_std = 0.25; 
 
 %Noise in X direction
 noise_std_x = 2; % one meter
@@ -53,7 +56,6 @@ else
     raw_range = range_noise_std*randn(num_measurement,1)+ground_truth(:,6);
     raw_angle = angle_noise_std*randn(num_measurement,1)+ground_truth(:,7);
     raw_velocity = velocity_noise_std*randn(num_measurement,1)+ground_truth(:,8);
-
     raw_x = raw_range.*sin(raw_angle);
     raw_y = raw_range.*cos(raw_angle);
     % We do have radial velocity but we do not know velcoity direction of actual object. 
@@ -72,7 +74,7 @@ if (VERBOSE)
     axis equal 
     grid on 
     hold on 
-    xlim([0 20])
+    xlim([0 40])
     ylim([0 120])
     xlabel('X axis')
     ylabel('Y-Axis')
