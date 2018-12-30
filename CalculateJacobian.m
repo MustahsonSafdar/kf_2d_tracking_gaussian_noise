@@ -1,7 +1,4 @@
 function  Hj = CalculateJacobian(x_state)
-   %{
-       * Calculate a Jacobian here.
-   %}
 
    Hj = zeros(3,4);
    
@@ -23,6 +20,7 @@ function  Hj = CalculateJacobian(x_state)
     end
 
     % compute the Jacobian matrix
+    % Here, conventional cartensian axis are considered
     Hj = [px/c2,                 py/c2,                  0,      0;
           py/c1,                 -px/c1,                  0,      0; 
           py*(vx*py - vy*px)/c3, px*(px*vy - py*vx)/c3,  px/c2,  py/c2];
