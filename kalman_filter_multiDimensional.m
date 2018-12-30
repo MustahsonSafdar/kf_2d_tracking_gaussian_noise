@@ -69,7 +69,7 @@ if (LIDAR_MODE)
       % Saving Estimated state for later qualitative analysis
       estimated(n,:) = x_k_k;
       % Prediction Step
-      [x_k_1, P_k_1] = predict(x_k_k, P_k_k, F);  
+      [x_k_1, P_k_1] = predict(x_k_k, P_k_k, F,Q_);  
       % Saved previous measurement to calculate velocity in next iteration
       x_minus_1 = x_pos;
       y_minus_1 = y_pos;
