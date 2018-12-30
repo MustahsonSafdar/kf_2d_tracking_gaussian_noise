@@ -3,7 +3,7 @@ VERBOSE = true;
 % The noise would be uniform throught the plane
 UNIFORM_NOISE = false;   % Else noise would be added as in radar, more noise for further the object is
 
-LIDAR_MODE = false;
+LIDAR_MODE = true;
 RADAR_MODE = ~LIDAR_MODE;
 
 % 15 mete per second or 54 km per hour
