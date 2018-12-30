@@ -1,6 +1,5 @@
-clc
-clear all
-close all
+% Main File to run Estimation Algorithms
+clc; clear all; close all
 
 % Frequency of radar measurement
 f_radar = 16;
@@ -12,21 +11,25 @@ F = [1 0 dt 0;
      0 1 0 dt;
      0 0 1 0; 
      0 0 0 1];
-
-% Generate simulated ground truth and noise realtime data
-Generate_Measurement
  
+% Generate simulated ground truth and noise realtime data
+%Generate_Measurement
+case_measurements
+
 %set the process covariance matrix Q
 % Note: This is not sure, where to use it, or should we use it 
-Q_ = zeros(4, 4);
+Q_ = zeros(4, 4);   % State vector consists of 4 elements so square matrix of size 4.
 dt_2 = dt * dt;
 dt_3 = dt_2 * dt;
 dt_4 = dt_3 * dt;
 
-Q_ = [ dt_4/4*noise_std_x,   0,                    dt_3/2*noise_std_x,  0; 
-       0,                    dt_4/4*noise_std_y,   0,                   dt_3/2*noise_std_y;
-       dt_3/2*noise_std_x,   0,                    dt_2*noise_std_x,    0; 
-       0,                    dt_3/2*noise_std_y,   0,                   dt_2*noise_std_y];
+proc_noise = 0.1*0.1;
+
+% As stated in The Gaussian Mixture Probability Hypothesis Density Filter
+Q_ = [ dt_4/4*proc_noise,   0,                    dt_3/2*proc_noise,  0; 
+       0,                    dt_4/4*proc_noise,   0,                   dt_3/2*proc_noise;
+       dt_3/2*proc_noise,   0,                    dt_2*proc_noise,    0; 
+       0,                    dt_3/2*proc_noise,   0,                   dt_2*proc_noise];
 
 % Error Covairance Matrix
 P_k_1 = [1, 0, 0, 0;
@@ -74,17 +77,17 @@ if (LIDAR_MODE)
       x_minus_1 = x_pos;
       y_minus_1 = y_pos;
   end
-% Radar Measurement Case
+  
+    % Radar Measurement Case
 else
-  for n = 1: length(raw_measurement)
+    for n = 1: length(raw_measurement)
       H_Radar_ = CalculateJacobian(x_k_1);
       [x_k_k, P_k_k, y_k_k] = update(x_k_1, raw_measurement(n,6:8), P_k_1, R_Radar_, H_Radar_);
       % Saving Estimated state for later qualitative analysis
       estimated(n,:) = x_k_k;
-      
+      % Prediction Step
       [x_k_1, P_k_1] = predict(x_k_k, P_k_k,F, Q_);
-      
-  end
+    end
 end
 
 plot(estimated(:,1),estimated(:,2),'k.')
